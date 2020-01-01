@@ -41,17 +41,20 @@ class Cards:
     This class simply build a standard deck of 52 Cards excluding jokers
     '''
     def __init__(self):
-        self.Deck = [{'A_heart':[1,11]},{'A_diamond':[1,11]},{'A_spade':[1,11]},{'A_club':[1,11]},
-                     2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,
-                     {'Q_heart':10},{'Q_diamond':10},{'Q_spade':10},{'Q_club':10},
-                     {'K_heart':10},{'K_diamond':10},{'K_spade'},{'K_club':10}]
+        self.Deck = [('A',(1,11)), ('A',(1,11)), ('A',(1,11)), ('A',(1,11)),
+                     ('2',2), ('2',2), ('2',2), ('2',2),
+                     ('3',3), ('3',3), ('3',3), ('3',3),
+                     ('4',4), ('4',4), ('4',4), ('4',4),
+                     ('5',5), ('5',5), ('5',5), ('5',5),
+                     ('6',6), ('6',6), ('6',6), ('6',6),
+                     ('7',7), ('7',7), ('7',7), ('7',7),
+                     ('8',8), ('8',8), ('8',8), ('8',8),
+                     ('9',9), ('9',9), ('9',9), ('9',9),
+                     ('10',10), ('10',10), ('10',10), ('10',10),
+                     ('J',10), ('J',10), ('J',10), ('J',10),
+                     ('Q',10), ('Q',10), ('Q',10), ('Q',10),
+                     ('K',10), ('K',10), ('K',10), ('K',10)]
 
-        '''
-        self.Deck = [{'A_heart':[1,11]},{'A_diamond':[1,11]},{'A_spade':[1,11]},{'A_club':[1,11]},
-                     2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,
-                     {'Q_heart':10},{'Q_diamond':10},{'Q_spade':10},{'Q_club':10},
-                     {'K_heart':10},{'K_diamond':10},{'K_spade'},{'K_club':10}]
-        '''
     def shuffle(self):
         '''
         INPUT: None
@@ -60,15 +63,17 @@ class Cards:
         return random.shuffle(self.Deck)
 
     def __str__(self):
-        return(f"{self.Deck}")
+        '''
+        RETURN: The number of cards in the deck
+        '''
+        return(f"{len(self.Deck)}")
 
     def draw_a_card(self):
         '''
         INPUT: None
         OUTPUT: A valid card value in BlackJack
         '''
-        num = random.randint(0, len(self.Deck))
-        print(f'\nThe random index picked is {num} and the car there is {self.Deck[num]}\n')
+        return self.Deck.pop(random.randint(0, len(self.Deck)))
 
 class Game:
 
@@ -102,9 +107,17 @@ print(f'Right after adding $500 --> {player}\n')
 cards = Cards()
 cards.shuffle()
 print(cards)
-'''
+
 cards = Cards()
-cards.draw_a_card()
+card, value = cards.draw_a_card()
+print(f'After drawing a {card}, there are now {cards} cards left')
+card, value = cards.draw_a_card()
+print(f'After drawing a {card}, there are now {cards} cards left')
+'''
 
-
-
+# A few things to think about next:
+'''
+1. Verify what happenes if by any chance all the cards end up being drawn (Write a resetDeck() or something).
+2. Think about when the cards should be shuffled (look up rules for that or come up with something fair).
+3. Move on to emplementing the game methods.
+'''
