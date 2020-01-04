@@ -38,7 +38,7 @@ Card Values
 
         In real BlackJack games, there are more actions such as Double Downs, Split and Surrender but in this game we will
         only Stand or Hit.
-
+        
 3. Payouts
 ----------
         . If the player and dealer have equal umbusted totals, then the game is ties and the player's bet is returned.
@@ -50,6 +50,18 @@ Card Values
 Good Luck and have fun :)
 
 
+# Documentation
+
+Dealer class:
+--------------
+Attributes:
+        cards (List)
+        hidden_card (int)
+Methods:
+        hide_first_card() : Hides the one of the dealer's cards.
+        reveal_hidden_card() : Reveals the dealer's hidden card.
+        
+       
 
 
 
