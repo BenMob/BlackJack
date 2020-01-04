@@ -54,12 +54,12 @@ Good Luck and have fun :)
 
 Dealer class:
 --------------
-Attributes:
-----------
+        Attributes
+        ----------
         cards (List)
         hidden_card (int)
-Methods:
---------
+        Methods:
+        --------
         hide_first_card() : Hides the one of the dealer's cards.
         reveal_hidden_card() : Reveals the dealer's hidden card.
         
