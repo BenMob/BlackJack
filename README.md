@@ -8,7 +8,7 @@ This is a simplified version on the Casino BlackJack game using OOP in Python.
         In this case, the house dealer will be the computer and you will be the player. 
         The player's goal is to have in hand a total value of cards closer to 21 than the dealer, but not over 21. (Busting)
 
-Card Values 
+Card Values
 -----------
         . Cards from 2 to 10 keep their face values.
         . Jacks Queens and Kings are valued at 10.
@@ -34,7 +34,7 @@ Card Values
 3. ACTIONS
 ----------
         . Stand: If the player is happy with their total card value they can stand, meaning they get no more cards.
-        . Hit: If the player is not happy with their total card, they can hit and get one more card until they Stand, or if             they reach or pass 21.
+        . Hit: If the player is not happy with their total card, they can hit and get one more card until they Stand, or if  they reach or pass 21.
 
         In real BlackJack games, there are more actions such as Double Downs, Split and Surrender but in this game we will
         only Stand or Hit.
