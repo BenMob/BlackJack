@@ -45,7 +45,7 @@ class Cards:
         INPUT: None
         OUTPUT: A valid card value in BlackJack as a tuple
         '''
-        card, value = self.Deck.pop(random.randint(0, len(self.Deck)))
+        card, value = self.Deck.pop(random.randint(0, len(self.Deck) - 1))
         if card == 'A':
             value = self.determine_Ace_value(card_List)
         

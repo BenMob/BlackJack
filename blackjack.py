@@ -33,10 +33,13 @@ class Game:
             _, value = self.deck.draw_a_card(self.dealer.cards)
             self.dealer.cards.append(value)
 
+            # Updating player's total value
+            self.player.total_card_value = sum(self.player.cards)
+
             # Hiding one of the deal's cards
             self.dealer.hide_first_card()
 
-        return (sum(self.player.cards), sum(self.dealer.cards[1:]))
+        return (self.player.total_card_value, sum(self.dealer.cards[1:]))
 
     # --------------------------------
     def hit(self, card_list = []):
@@ -62,9 +65,9 @@ class Game:
         '''
         self.clearTable()
         print('\n_____________________________\n')
-        print(f'Current fund: ${self.player.funds}')
-        print(f'Current deal: ${self.current_deal}')
-        print(f'Possible win: ${self.current_deal * 2}')
+        print(f'   Current fund: ${self.player.funds}')
+        print(f'   Current deal: ${self.current_deal}')
+        print(f'   Possible win: ${self.current_deal * 2}')
         print('_____________________________\n')
 
         print(f'\n\tYou: {self.player.cards} \t\t\t\t Dealer: {self.dealer.cards} -> {sum(list(self.dealer.cards[1:]))}')
@@ -75,7 +78,7 @@ class Game:
     def execute_play(self):
         '''
         INPUT: None
-        Executes the player's move (Hit or Stand)
+        Return 1 for hit and 2 for stand
         '''
         while True:
             try:
@@ -87,11 +90,7 @@ class Game:
             except:
                 self.print_table()
 
-        # Executing play
-        if choice == 1:
-            self.hit(self.player.cards)
-        else:
-            return 'stand'
+        return choice
         
     # ----------------------------------
     def clearTable(self):
@@ -108,6 +107,17 @@ class Game:
         # For every other OS
         else: 
             _ = os.system('clear')
+    
+    # ----------------------------------
+    def check_blackjack(self, card_list = []):
+        '''
+        '''
+        if sum(card_list) == 21:
+            return 'blackjack'
+        elif sum(card_list) < 21:
+            return 'ok'
+        else:
+            return 'bust'
 
     # ---------------------------------
     def game_play(self):
@@ -125,20 +135,56 @@ class Game:
             except:
                 print('Invalid Input!')
 
+        # Execute player's turn
+        self.player_play()
+
+    # -------------------------------------    
+    def player_play(self):
         # Step 1: Asking the player how much money they are betting.
         self.current_deal = self.player.bet()
 
         # Step 2: Distributing cards
-        player_total, dealer_total = self.distribute_cards()
-
-        # Step 3: Game starts
-        game_on = True
-
-        while game_on:
+        player_total, _= self.distribute_cards()
+        
+        if player_total == 21:
             self.print_table()
-            move = self.execute_play()
-            if move ==  'stand':
-                game_on = False
+            print('\f BLACKJACK. WOHAA!!!')
+            ## self.payout('blackjack')
+            ## self.show_current funds and ask if they want to play again
+        else:
+            # Step 3: Hit or Stand
+            player_turn = True
+        
+            while player_turn:
+                self.print_table()
+
+                if self.execute_play() == 1:
+                    self.hit(self.player.cards)
+
+                    deal = self.check_blackjack(self.player.cards)
+                    
+                    if deal == 'blackjack':
+                        self.print_table()
+                        print("Dealer's turn (Possible tie)")
+                        ## self.dealer_turn()
+                        ## Id dealer's turn is also black jack deal = tie
+                        break
+                    elif deal == 'bust':
+                        self.print_table()
+                        print('\t\t\tBUST\n')
+                        break
+                        ## self.payout('bust')
+                        ## self.show_current funds and ask if they want to play again
+                else:
+                    print("Dealer's turn, (no possible tie)")
+                    break
+                    ## self.dealer_turn
+                    ## self.dealer's turn (No possible tie)
+
+
+
+
+                
 
 
         
