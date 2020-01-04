@@ -33,32 +33,19 @@ Card Values
 
 3. ACTIONS
 ----------
-<<<<<<< HEAD
 . Stand: If the player is happy with their total card value they can stand, meaning they get no more cards.
 . Hit: If the player is not happy with their total card value, they can hit and get one more card until they Stand or if they reach or pass 21.
 
 . In real BlackJack games, there are more actions such as Double Downs, Split and Surrender but in this game we will only Stand or Hit.
-=======
-        . Stand: If the player is happy with their total card value they can stand, meaning they get no more cards.
-        . Hit: If the player is not happy with their total card, they can hit and get one more card until they Stand, or if  they reach or pass 21.
->>>>>>> 615c86b32f1ee0e7351eb53aa809451647393217
 
         In real BlackJack games, there are more actions such as Double Downs, Split and Surrender but in this game we will
         only Stand or Hit.
         
 3. Payouts
 ----------
-<<<<<<< HEAD
 . If the player and dealer have equal unbusted totals, then the game is tied and the player's bet is returned.
 . If the player wins a hand they are paid out 1:1 on their bet. Example: Bet = $20  --> Win = $20 --> Total Pay = $40.
 . If the player has BlackJack they get paid out 3:2 on their bet. Example: Bet = $10 --> Win = $15 --> Total Pay = $25.
-=======
-        . If the player and dealer have equal umbusted totals, then the game is ties and the player's bet is returned.
-        . If the player wins a hand they are paid out 1:1 on their bet. Example: Bet = $20  --> Win = $20 --> Total Pay =
-        $40.
-        . If the player has BlackJack they get paid out 3:2 on their bet. Example: Bet = $10 --> Win = $15 --> Total Pay =
-        $25.
->>>>>>> 615c86b32f1ee0e7351eb53aa809451647393217
 
 Good Luck and have fun :)
 
