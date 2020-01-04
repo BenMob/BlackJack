@@ -3,13 +3,14 @@ This is a simplified version on the Casino BlackJack game using OOP in Python.
 
 # Description
 
-        BlackJack, also known as 21 is one of the most popular casino games out there. In BlackJack players compete against the house(casino) and not against each other. In this case, the house dealer will be the computer and you will be the player. The player's goal is to have in hand a total value of cards closer to 21 than the dealer, but not over 21. (Busting)
+        BlackJack, also known as 21 is one of the most popular casino games out there. In BlackJack players compete against the house(casino) and not against each other. 
+        In this case, the house dealer will be the computer and you will be the player. The player's goal is to have in hand a total value of cards closer to 21 than the dealer, but not over 21. (Busting)
 
 Card Values 
 -----------
-        Cards from 2 to 10 keep their face values.
-        Jacks Queens and Kings are valued at 10.
-        Aces can be either 1 or 11 depending on the player's favor.
+        . Cards from 2 to 10 keep their face values.
+        . Jacks Queens and Kings are valued at 10.
+        . Aces can be either 1 or 11 depending on the player's favor.
 
 A player starting value of a 10 valued card and an Ace is called a Blackjack in which case the player automaticaly wins.
 
@@ -17,8 +18,8 @@ A player starting value of a 10 valued card and an Ace is called a Blackjack in 
 # Order of play
 1. BETTING  
 ----------
-. The player will first place a fake money bet from the fake money bank provided by the computer in this case. 
-. Values: $1   $5   $10   $20   $50   $100   $500   $2500   $5000
+        . The player will first place a fake money bet from the fake money bank provided by the computer in this case. 
+        . Values: $1   $5   $10   $20   $50   $100   $500   $2500   $5000
 
 2. CARD DISTRIBUTION
 ---------------------
