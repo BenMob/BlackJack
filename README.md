@@ -58,6 +58,7 @@ Dealer class:
         ----------
         cards (List)
         hidden_card (int)
+        
         Methods:
         --------
         hide_first_card() : Hides the one of the dealer's cards.
