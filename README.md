@@ -54,17 +54,49 @@ Good Luck and have fun :)
 
 Dealer class:
 --------------
-        # Attributes
+        Attributes
         ----------
-        cards (List)
-        hidden_card (int)
+        . cards (List)
+        . hidden_card (int)
         
-        # Methods:
+        Methods:
         --------
-        hide_first_card() : Hides the one of the dealer's cards.
-        reveal_hidden_card() : Reveals the dealer's hidden card.
+        . hide_first_card() : Hides the one of the dealer's cards.
+        . reveal_hidden_card() : Reveals the dealer's hidden card.
+
+Player class:
+-------------
+        Attributes
+        ----------
+        . username: string
+        . funds: int
+        . cards: List
         
-       
+        Methods
+        -------
+        . bet(): Asks the player how much they want to bet.
+        . add_funds(int amount): Adds amount to the player's funds.
 
-
+Cards class:
+------------
+        Attributes
+        ----------
+        . Deck: List of tuples holding card names and values.
+        
+        Methods
+        -------
+        . shuffle(): Shuffles cards.
+        . draw_a_card(): Draws a card from the deck and returns a tuple (card, value).
+        . determine_Ace_value(card list): Determins whether the value of ace should be 1 or 11 based on the card list passed in.
+        
+Game class:
+-----------
+        Attributes
+        ----------
+        player: Object of type Player.
+        dealer: Object of type Dealer.
+        deck: Object of type Cards.
+        
+        Methods
+        -------
 
