@@ -1,118 +1,19 @@
-# By Benjamin Ombeni
-# 12/31/2019
-
-# This is a simplified version on the Casino BlackJack game using OOP in Python.
-
-import random
+# By Benjamin
 import os
+from dealer import Dealer
+from player import Player
+from cards import Cards
 
-class Dealer:
-    '''
-    INPUT: None
-    This is the dealer's class. 
-    '''
-    def __init__(self):
-        self.cards = [] # Place holder for the dealer's cards
-
-# ======================================================================
-class Player:
-    '''
-    INPUT: funds(int)
-    '''
-    
-    # --------------------------------------
-    def __init__(self, username = '', funds = 0):
-        self.username = username 
-        self.funds = funds
-        self.cards = [] # Place holder for the player's cards
-
-    # --------------------------------
-    def bet(self, amount):
-        '''
-        INPUT: amount(int)
-        Extracts the amount from the total funds and returns it.
-        '''
-        if amount > self.funds:
-            print("Not enough funds")
-            return 0
-        else:
-            self.funds -= amount
-            return amount
-
-    # ---------------------------------
-    def add_funds(self, amount):
-        '''
-        INPUT: amount (int)
-        Adds amount to the player's funds.
-        '''
-        try:
-            self.funds += amount
-            return True 
-        except:
-             print('Invalid Input!')
-             return False
-
-    # ---------------------------------
-    def __str__(self):
-        '''
-        Prints the player's user name and their current total funds
-        '''
-        return (f'{self.username}: ${self.funds}')
-
-# ======================================================================
-class Cards:
-    '''
-    INPUT: None
-    This class simply build a standard deck of 52 Cards excluding jokers
-    '''
-
-    # ----------------------------------
-    def __init__(self):
-        self.Deck = [('A',(1,11)), ('A',(1,11)), ('A',(1,11)), ('A',(1,11)),
-                     ('2',2), ('2',2), ('2',2), ('2',2),
-                     ('3',3), ('3',3), ('3',3), ('3',3),
-                     ('4',4), ('4',4), ('4',4), ('4',4),
-                     ('5',5), ('5',5), ('5',5), ('5',5),
-                     ('6',6), ('6',6), ('6',6), ('6',6),
-                     ('7',7), ('7',7), ('7',7), ('7',7),
-                     ('8',8), ('8',8), ('8',8), ('8',8),
-                     ('9',9), ('9',9), ('9',9), ('9',9),
-                     ('10',10), ('10',10), ('10',10), ('10',10),
-                     ('J',10), ('J',10), ('J',10), ('J',10),
-                     ('Q',10), ('Q',10), ('Q',10), ('Q',10),
-                     ('K',10), ('K',10), ('K',10), ('K',10)]
-
-    # -----------------------------------
-    def shuffle(self):
-        '''
-        INPUT: None
-        This method simply shuffles the deck of cards.
-        '''
-        return random.shuffle(self.Deck)
-
-    def __str__(self):
-        '''
-        RETURN: The number of cards in the deck
-        '''
-        return(f"{len(self.Deck)}")
-
-    def draw_a_card(self):
-        '''
-        INPUT: None
-        OUTPUT: A valid card value in BlackJack
-        '''
-        return self.Deck.pop(random.randint(0, len(self.Deck) - 1))
-
-# ==================================================
 class Game:
     '''
     INPUT: An object of the class player
     '''
     # ---------------------------------
-    def __init__(self, player):    
-        self.player = player
+    def __init__(self):    
+        self.player = Player()
         self.dealer = Dealer()
         self.deck = Cards()
+        self.current_deal = 0
 
     # ---------------------------------
     def distribute_cards(self):
@@ -124,28 +25,31 @@ class Game:
         self.deck.shuffle()
 
         while len(self.player.cards) != 2 and len(self.dealer.cards) != 2:
-
             # Drawing player's card
-            card, value = self.deck.draw_a_card()
-            if card == 'A':
-                value = self.determine_Ace_value(self.player.cards)
+            _, value = self.deck.draw_a_card(self.player.cards)
             self.player.cards.append(value)
-
+            
             # Drawing dealer's card
-            card, value = self.deck.draw_a_card()
-            if card == 'A':
-                value = self.determine_Ace_value(self.dealer.cards)
+            _, value = self.deck.draw_a_card(self.dealer.cards)
             self.dealer.cards.append(value)
-        
 
-        return (sum(self.player.cards), sum(self.dealer.cards))
+            # Hiding one of the deal's cards
+            self.dealer.hide_first_card()
+
+        return (sum(self.player.cards), sum(self.dealer.cards[1:]))
+
     # --------------------------------
-    def hit(self):
-        pass
+    def hit(self, card_list = []):
+        '''
+        INPUT: List of current cards
+        OUTPUT:  
+        '''
+        _, value = self.deck.draw_a_card(card_list)
+        card_list.append(value)
 
     # -------------------------------- 
     def stand(self):
-        pass
+        print('Done')
 
     # --------------------------------
     def payout(self):
@@ -154,24 +58,42 @@ class Game:
     def print_table(self):
         '''
         INPUT: None
+        TASK: Prints the game table
         '''
         self.clearTable()
-        print(f'\n\t\t\t\t\t\t\t\t\t\t\tYou: {self.player.cards}{sum(self.player.cards)} \t\t\t Dealer: {self.dealer.cards}{sum(self.dealer.cards)}')
-        print(self.deck)
+        print('\n_____________________________\n')
+        print(f'Current fund: ${self.player.funds}')
+        print(f'Current deal: ${self.current_deal}')
+        print(f'Possible win: ${self.current_deal * 2}')
+        print('_____________________________\n')
 
-        # INCOMPLETE    
+        print(f'\n\tYou: {self.player.cards} \t\t\t\t Dealer: {self.dealer.cards} -> {sum(list(self.dealer.cards[1:]))}')
+        print(f'\t{sum(self.player.cards)}\n')
+        print('\n\t1. Hit\n\t2. Stand\n')
 
-    # --------------------------------
-    def determine_Ace_value(self, card_list):
+    # ----------------------------------------------------     
+    def execute_play(self):
         '''
-        INPUT list of card values
+        INPUT: None
+        Executes the player's move (Hit or Stand)
         '''
-        if sum(card_list) + 11 <= 21:
-            return 11
+        while True:
+            try:
+                choice = int(input('\fChoice: ' ))
+                if choice == 1 or choice == 2:
+                    break
+                else:
+                    self.print_table()
+            except:
+                self.print_table()
+
+        # Executing play
+        if choice == 1:
+            self.hit(self.player.cards)
         else:
-            return 1
-
-    # --------------------------------
+            return 'stand'
+        
+    # ----------------------------------
     def clearTable(self):
         '''
         INPUT: None
@@ -187,44 +109,36 @@ class Game:
         else: 
             _ = os.system('clear')
 
-    # ----------------------------------
+    # ---------------------------------
     def game_play(self):
-        pass
-    
-# ============================================
+        '''
+        INPUT: None
+        This method execute the game
+        '''
+        # Step 0: Preparing the game
+        print('\n\t\tWELCOME TO BLACKJACK\n')
+        self.player.username = input('Enter your name: ')
+        while True:
+            try:
+                self.player.funds = int(input('Load money: $'))
+                break
+            except:
+                print('Invalid Input!')
 
-# Test Cases
-'''
-player = Player(250)
+        # Step 1: Asking the player how much money they are betting.
+        self.current_deal = self.player.bet()
 
-print(f'\nRight after creating the player --> {player}')
-bet = player.bet(100)
-print(f'Right after betting ${bet} --> {player}\n')
+        # Step 2: Distributing cards
+        player_total, dealer_total = self.distribute_cards()
 
-print(player.add_funds('2'))
-print(f'Right after adding $500 --> {player}\n')
+        # Step 3: Game starts
+        game_on = True
 
-cards = Cards()
-cards.shuffle()
-print(cards)
+        while game_on:
+            self.print_table()
+            move = self.execute_play()
+            if move ==  'stand':
+                game_on = False
 
-cards = Cards()
-card, value = cards.draw_a_card()
-print(f'After drawing a {card}, there are now {cards} cards left')
-card, value = cards.draw_a_card()
-print(f'After drawing a {card}, there are now {cards} cards left')
-'''
 
-# A few things to think about next:
-'''
-1. Verify what happenes if by any chance all the cards end up being drawn (Write a resetDeck() or something).
-2. Think about when the cards should be shuffled (look up rules for that or come up with something fair).
-3. Move on to emplementing the game methods.
-'''
-
-player = Player('Benjamin',250)
-game = Game(player)
-p,d = game.distribute_cards()
-game.print_table()
-print(p)
-print(d)
+        
