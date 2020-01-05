@@ -13,7 +13,6 @@ class Game:
         self.player = Player()
         self.dealer = Dealer()
         self.deck = Cards()
-        self.current_deal = 0
 
     # ---------------------------------
     def distribute_cards(self):
@@ -25,6 +24,7 @@ class Game:
         self.deck.shuffle()
 
         while len(self.player.cards) != 2 and len(self.dealer.cards) != 2:
+
             # Drawing player's card
             _, value = self.deck.draw_a_card(self.player.cards)
             self.player.cards.append(value)
@@ -33,13 +33,14 @@ class Game:
             _, value = self.deck.draw_a_card(self.dealer.cards)
             self.dealer.cards.append(value)
 
-            # Updating player's total value
-            self.player.total_card_value = sum(self.player.cards)
+        # Storing total values
+        player_total = sum(self.player.cards)
+        dealer_total = sum(self.dealer.cards)
 
-            # Hiding one of the deal's cards
-            self.dealer.hide_first_card()
+        # Hiding one of the deal's cards
+        self.dealer.hide_first_card()
 
-        return (self.player.total_card_value, sum(self.dealer.cards[1:]))
+        return (player_total, dealer_total)
 
     # --------------------------------
     def hit(self, card_list = []):
@@ -80,6 +81,7 @@ class Game:
         INPUT: None
         Return 1 for hit and 2 for stand
         '''
+        # Collecting player's choice
         while True:
             try:
                 choice = int(input('\fChoice: ' ))
@@ -107,17 +109,41 @@ class Game:
         # For every other OS
         else: 
             _ = os.system('clear')
-    
+
     # ----------------------------------
-    def check_blackjack(self, card_list = []):
+    def dealer_turn(self):
         '''
+        INPUT: None
+        This method will execute the dealer's play
         '''
-        if sum(card_list) == 21:
-            return 'blackjack'
-        elif sum(card_list) < 21:
-            return 'ok'
+        # Revealing the dealer's hidden card
+        self.dealer.reveal_hidden_card()
+
+        while len(self.dealer.cards) <= len(self.player.cards):
+
+            # Dealer's total == Player's total
+            if len(self.dealer.cards) == len(self.player.cards):
+                return 'push' # Tie game
+           
+            # Dealer's total is less than player's
+            else:
+                self.hit(self.dealer.cards)
+
+        # Dealer has won
         else:
-            return 'bust'
+            if len(self.dealer.cards) < 21:
+                return 'win'
+        
+            # Dealer has busted
+            else:
+                return 'bust' 
+            
+    # ----------------------------------
+    def player_has_busted(self):
+        '''
+        '''
+        return sum(self.player.cards) > 21
+        
 
     # ---------------------------------
     def game_play(self):
@@ -140,17 +166,30 @@ class Game:
 
     # -------------------------------------    
     def player_play(self):
+
         # Step 1: Asking the player how much money they are betting.
         self.current_deal = self.player.bet()
 
         # Step 2: Distributing cards
-        player_total, _= self.distribute_cards()
+        player_total, _ = self.distribute_cards()
         
+        # Checking for Black Jack Tie
         if player_total == 21:
-            self.print_table()
-            print('\f BLACKJACK. WOHAA!!!')
-            ## self.payout('blackjack')
-            ## self.show_current funds and ask if they want to play again
+            if self.dealer_turn == 'push':
+                ## May consider revealing dealer's hidden card
+                self.print_table()
+                print(f"Dealer's turn returned {self.dealer_turn} and player's total is {player_total}")
+                print('\f PUSH!')
+                ## self.payout (push)
+                ## show current funds and ask if they want to play again
+            elif self.dealer_turn() == 'bust':
+                self.print_table()
+                print(f"Dealer's turn returned {self.dealer_turn} and player's total is {player_total}") 
+                print('\f BLACKJACK. WOHAA!!!')
+                ## self.payout('blackjack')
+                ## self.show_current funds and ask if they want to play again
+
+        # NO BLACK_JACK
         else:
             # Step 3: Hit or Stand
             player_turn = True
@@ -161,22 +200,15 @@ class Game:
                 if self.execute_play() == 1:
                     self.hit(self.player.cards)
 
-                    deal = self.check_blackjack(self.player.cards)
-                    
-                    if deal == 'blackjack':
-                        self.print_table()
-                        print("Dealer's turn (Possible tie)")
-                        ## self.dealer_turn()
-                        ## Id dealer's turn is also black jack deal = tie
-                        break
-                    elif deal == 'bust':
+                    if self.player_has_busted():
                         self.print_table()
                         print('\t\t\tBUST\n')
                         break
-                        ## self.payout('bust')
-                        ## self.show_current funds and ask if they want to play again
+                   
                 else:
-                    print("Dealer's turn, (no possible tie)")
+                    self.print_table()
+                    print("Dealer's turn")
+                    print(self.dealer_turn())
                     break
                     ## self.dealer_turn
                     ## self.dealer's turn (No possible tie)
