@@ -1,5 +1,6 @@
 # By Benjamin
 import os
+import time
 from dealer import Dealer
 from player import Player
 from cards import Cards
@@ -65,13 +66,20 @@ class Game:
         TASK: Prints the game table
         '''
         self.clearTable()
-        print('\n_____________________________\n')
+        print('\n___________________________\n')
         print(f'   Current fund: ${self.player.funds}')
         print(f'   Current deal: ${self.current_deal}')
         print(f'   Possible win: ${self.current_deal * 2}')
-        print('_____________________________\n')
+        print('___________________________\n')
 
-        print(f'\n\tYou: {self.player.cards} \t\t\t\t Dealer: {self.dealer.cards} -> {sum(list(self.dealer.cards[1:]))}')
+        print(f'\n\tYou: {self.player.cards} \t\t\t\t Dealer: {self.dealer.cards} -> ', end = '')
+        
+        # Include the dealer's first card only if it is not hidden
+        if self.dealer.cards[0] == 'X':
+            print(sum(list(self.dealer.cards[1:])))
+        else:
+            print(sum(self.dealer.cards))
+
         print(f'\t{sum(self.player.cards)}\n')
         print('\n\t1. Hit\n\t2. Stand\n')
 
@@ -119,19 +127,22 @@ class Game:
         # Revealing the dealer's hidden card
         self.dealer.reveal_hidden_card()
 
-        while len(self.dealer.cards) <= len(self.player.cards):
+        while sum(self.dealer.cards) <= sum(self.player.cards):
 
             # Dealer's total == Player's total
-            if len(self.dealer.cards) == len(self.player.cards):
+            if sum(self.dealer.cards) == sum(self.player.cards):
                 return 'push' # Tie game
            
             # Dealer's total is less than player's
             else:
+                self.print_table()
+                print('\t\t\tWait for the dealer ...')
+                time.sleep(4)
                 self.hit(self.dealer.cards)
 
         # Dealer has won
         else:
-            if len(self.dealer.cards) < 21:
+            if sum(self.dealer.cards) <= 21:
                 return 'win'
         
             # Dealer has busted
@@ -152,8 +163,9 @@ class Game:
         This method execute the game
         '''
         # Step 0: Preparing the game
+        self.clearTable()
         print('\n\t\tWELCOME TO BLACKJACK\n')
-        self.player.username = input('Enter your name: ')
+
         while True:
             try:
                 self.player.funds = int(input('Load money: $'))
@@ -206,9 +218,9 @@ class Game:
                         break
                    
                 else:
+                    game = self.dealer_turn()
                     self.print_table()
-                    print("Dealer's turn")
-                    print(self.dealer_turn())
+                    print(f"\t\tThe Dealer {game}")
                     break
                     ## self.dealer_turn
                     

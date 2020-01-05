@@ -6,6 +6,3 @@ import blackjack
 
 game = blackjack.Game()
 game.game_play()
-
-
-

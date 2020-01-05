@@ -6,8 +6,7 @@ class Player:
     This is the player's class
     '''
     # --------------------------------------
-    def __init__(self, username = '', funds = 0):
-        self.username = username 
+    def __init__(self, funds = 0):
         self.funds = funds
         self.cards = [] # Place holder for the player's cards
 
@@ -48,5 +47,5 @@ class Player:
         '''
         Prints the player's user name and their current total funds
         '''
-        return (f'{self.username}: ${self.funds}')
+        return (f'You have ${self.funds}')
 
