@@ -10,7 +10,6 @@ class Player:
         self.username = username 
         self.funds = funds
         self.cards = [] # Place holder for the player's cards
-        self.total_card_value = 0
 
     # --------------------------------
     def bet(self):

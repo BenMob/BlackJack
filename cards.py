@@ -57,8 +57,12 @@ class Cards:
         INPUT: list of card values
         Return: value of Ace (1 or 11)
         '''
-        if sum(card_list) + 11 <= 21:
-            return 11
-        else:
-            return 1
+        try:
+            print(f'Current List: {card_list}')    
+            if sum(card_list) + 11 <= 21:
+                return 11
+            else:
+                return 1
+        except:
+            print(f'Error in determine_Ace_value()     Current List: {card_list}')
 
