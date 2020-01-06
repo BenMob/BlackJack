@@ -23,6 +23,8 @@ class Player:
                 # Checking the amount
                 if amount > self.funds:
                     print("Stay within your financial lane!")
+                elif amount <= 0:
+                    print("The amount must be at least $1")
                 else:
                     self.funds -= amount
                     return amount

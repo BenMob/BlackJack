@@ -1,4 +1,5 @@
 # By Benjamin
+
 import os
 import time
 from dealer import Dealer
@@ -54,10 +55,11 @@ class Game:
         card_list.append(value)
 
     # --------------------------------
-    def payout(self, result):
+    def evaluate_results(self, result):
         '''
-        INPUT: Result string-> 'blackjack', 'win, push 
+        INPUT: Result string-> 'blackjack', 'win', 'push' or 'bust 
         '''
+        self.print_table()
 
         if result == 'blackjack':
             print('\t\t\tBLACKJACK WIN!\n')
@@ -79,6 +81,9 @@ class Game:
             print('\t\t\tBUST\n')
             print(f'\n\t\t\t\tYou have ${self.player.funds} left\n')
 
+        # reset the game 
+        self.reset(self.player.funds)
+
         # Checking if the player still wnat to bet
         if self.player.funds > 0:
 
@@ -90,28 +95,27 @@ class Game:
                     self.print_table()
 
             if choice.lower() == 'y':
-                self.reset(self.player.funds)
-                self.print_table()
-                self.player_play()
+                self.print_table(False)
+                self.game_play()
 
-            elif choice == 'n':
+            elif choice.lower() == 'n':
                 print('\n\t\t\t\tGood Bye!\n')
         else:
-            print('\n\t\t\t\tYou have no money left. Good Bye!\n')
+            print('\t\t\t\tGood Bye!\n')
 
 
     # ---------------------------------------------------------------------
-    def print_table(self):
+    def print_table(self, hit_or_stand = True):
         '''
         INPUT: None
         TASK: Prints the game table
         '''
         self.clearTable()
         print('\n___________________________\n')
-        print(f'   Your money: ${self.player.funds + self.current_deal}')
-        print(f'   Your bet: ${self.current_deal}')
-        print(f'   Possible win: ${self.current_deal * 2}')
-        print(f'___________________________\nRound: {self.round}\n')
+        print(f'   Pocket: ${self.player.funds}')
+        print(f'   Bet: ${self.current_deal}')
+        print(f'   Deal: +${self.current_deal * 2}')
+        print(f'___________________________\n{self.round}\n')
 
         print(f'\n\tYou: {self.player.cards} \t\t\t\t Dealer: {self.dealer.cards} -> ', end = '')
         
@@ -120,11 +124,10 @@ class Game:
             print(sum(list(self.dealer.cards[1:])))
         else:
             print(sum(self.dealer.cards))
-
         print(f'\t{sum(self.player.cards)}\n')
-        print('\n\t1. Hit\n\t2. Stand\n')
 
-
+        if hit_or_stand:
+            print('\n\t1. Hit\n\t2. Stand\n')
 
 
     # ----------------------------------------------------     
@@ -204,10 +207,10 @@ class Game:
         
 
     # ---------------------------------
-    def game_play(self):
+    def start_game(self):
         '''
         INPUT: None
-        This method execute the game
+        This method sets the the game, then calls the gameplay method
         '''
         # Step 0: Preparing the game
         self.clearTable()
@@ -216,16 +219,21 @@ class Game:
         while True:
             try:
                 self.player.funds = int(input('Load money: $'))
-                break
+                if self.player.funds <= 0:
+                    print('You must have at least $1')
+                else:
+                    break
             except:
                 print('Invalid Input!')
 
-        # Execute player's turn
-        self.player_play()
+        # Let the game start
+        self.game_play()
 
     # -------------------------------------    
-    def player_play(self):
-
+    def game_play(self):
+        '''
+        This methos executes the game
+        '''
         # Step 1: Asking the player how much money they are betting.
         self.current_deal = self.player.bet()
 
@@ -234,41 +242,35 @@ class Game:
         
         # Checking for Black Jack Tie
         if player_total == 21:
-            if self.dealer_turn(True) == 'push':
-                self.print_table()
-                self.payout('push')
+            if self.dealer_turn(True) == 'push': 
+                self.evaluate_results('push')
                 
             elif self.dealer_turn(True) == 'win':
-                self.print_table()
-                self.payout('blackjack')   
+                self.evaluate_results('blackjack')   
 
         # NO BLACK_JACK
         else:
             # Step 3: Hit or Stand
-            player_turn = True
-        
-            while player_turn:
+            while True:
                 self.print_table()
 
                 if self.execute_play() == 1:
                     self.hit(self.player.cards)
 
                     if self.player_has_busted():
-                        self.print_table()
-                        print('\t\t\tBUST\n')
-                        print(self.player_has_busted())
-                        self.payout('bust')
-
-                        player_turn = False
+                        self.evaluate_results('bust')
+                        break
                    
                 else:
                     result = self.dealer_turn()
-                    self.print_table()
-                    self.payout(result)
+                    self.evaluate_results(result)
+                    break
 
     # -----------------------------------------------------
     def reset(self, player_fund = 0):
         '''
+        INPUT: player's fund
+        This method resets the game
         '''
         self.player = Player(player_fund)
         self.dealer = Dealer()
