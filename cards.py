@@ -37,10 +37,10 @@ class Cards:
         '''
         RETURN: The number of cards in the deck
         '''
-        return(f"{len(self.Deck)}")
+        return(len(self.Deck))
 
     # -----------------------------------
-    def draw_a_card(self, card_List = []):
+    def draw_a_card(self, card_List=[]):
         '''
         INPUT: None
         OUTPUT: A valid card value in BlackJack as a tuple
@@ -57,12 +57,11 @@ class Cards:
         INPUT: list of card values
         Return: value of Ace (1 or 11)
         '''
-        try:
-            print(f'Current List: {card_list}')    
+        try:   
             if sum(card_list) + 11 <= 21:
                 return 11
             else:
                 return 1
         except:
-            print(f'Error in determine_Ace_value()     Current List: {card_list}')
+            print('Error in determine_Ace_value()     Current List: {}'.format(card_list))
 
